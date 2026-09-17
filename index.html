@@ -36,13 +36,13 @@
   </div>
   <h2>البحث عن حالة المصعد</h2>
   <div class="box">
-    <input id="idInput" placeholder="رقم المصعد" />
+    <input id="idInput" placeholder="رقم المصعد أو اسم المصعد" />
     <button onclick="doSearch()">بحث</button>
   </div>
   <div id="result"></div>
 
 <script>
-var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzI5gD75Yz7HpOMdBtkD_WDtPRwTMQwLkXnCiSN0UOhJ1P7Uav42QCpQkfctzErKxay/exec";
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9ba79PnEUM_36xX7BVOx9_uho3YRjqsDAmzKymzvmq4t4x9U79ZBGr7_NxQ0OhBui/exec";
 
 function doSearch(){
   var val = document.getElementById('idInput').value.trim();
@@ -54,6 +54,13 @@ function doSearch(){
     .catch(function(err){
       document.getElementById('result').innerHTML = "<div class='msg'>حصل خطأ في الاتصال، جرب تاني</div>";
     });
+}
+var AGENT_NAMES = {
+  "فوزي": "م. أحمد فوزي",
+  "احمد": "أحمد ناصر"
+};
+function displayAgent(name){
+  return AGENT_NAMES[name] || name;
 }
 function badge(text, ok){
   return "<span class='badge " + (ok ? 'ok' : 'bad') + "'>" + text + "</span>";
@@ -77,14 +84,15 @@ function render(r){
   var html = "<div class='card'>" + banner + "<div class='card-body'>";
   html += "<div class='row'><span>الحالة</span>" + badge(r.status.label, r.status.ok) + "</div>";
   html += fieldRow("العميل", r.customer);
+  html += fieldRow("رقم الجوال", r.phone);
   html += fieldRow("الموقع", r.location);
   html += fieldRow("رقم العقد", r.contractNo);
   html += fieldRow("تاريخ الاستحقاق", r.dueDate);
   html += fieldRow("العنوان", r.address);
   html += fieldRow("النوع", r.elevatorType);
   html += fieldRow("حالة الضمان", r.warranty, true);
+  html += fieldRow("المندوب", displayAgent(r.agent));
   html += fieldRow("الفني", r.technician);
-  html += fieldRow("المندوب", r.agent);
   html += "</div></div>";
   el.innerHTML = html;
 }
